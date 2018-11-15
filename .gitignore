@@ -102,3 +102,17 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Electron JS
+api.spec
+.venv/
+node_modules/
+build/
+dist/
+*npm-debug.log
+*.DS_Store
+builds/
+.vscode/
+*darwin-x64*
+*win32-x64*
+*win32-ia32*
