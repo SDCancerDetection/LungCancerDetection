@@ -40,4 +40,5 @@ You may be prompted for user and password
 This will push your branch to the online repository
 
 Merge Code
+
 Go to the online reposity --> select branches --> select your (should be a pull request) --> click merge pull request
