@@ -16,7 +16,8 @@
     "electron-builder": "^20.34.0"
   },
   "dependencies": {
-    "python-shell": "^0.5.0"
+    "python-shell": "^0.5.0",
+    "zerorpc": "git+https://github.com/fyears/zerorpc-node.git"
   },
   "build": {
     "appId": "com.sendes.candet",
