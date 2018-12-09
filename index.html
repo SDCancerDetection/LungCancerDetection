@@ -1,14 +1,23 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Hello Python from Electron!</title>
-    </head>
-    <body>
-      <h1 id="tag">Hello Python!</h1>
-    </body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello Calculator!</title>
+  </head>
+  <body>
+    <h1>Hello Calculator!</h1>
+    <p>Input something like <code>1 + 1</code>.</p>
+    <p>This calculator supports <code>+-*/^()</code>,
+    whitespaces, and integers and floating numbers.</p>
+    <input id="formula" value="1 + 2.0 * 3.1 / (4 ^ 5.6)"></input>
+    <div id="result"></div>
+  </body>
+
+  <script>
+    window.$ = window.jQuery = require('./jquery-3.3.1.min.js');
+  </script>
+  <script>
+    require('./renderer.js')
+  </script>
 </html>
-
-<script>window.$ = window.jQuery = require('./jquery-3.3.1.min.js');</script>
-
-<script src="./index.js"></script>
