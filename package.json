@@ -13,29 +13,19 @@
   },
   "devDependencies": {
     "electron": "latest",
-    "electron-builder": "^20.34.0"
+    "electron-packager": "^13.0.1",
+    "electron-rebuild": "^1.8.4",
+    "electron-builder": "^20.38.5"
   },
   "dependencies": {
-    "python-shell": "^0.5.0",
+    "node-gyp": "^3.8.0",
+    "python-shell": "^1.0.4",
+    "zeromq": "^5.1.0",
     "zerorpc": "git+https://github.com/fyears/zerorpc-node.git"
   },
   "build": {
     "appId": "com.sendes.candet",
     "productName": "SD Cancer Detection",
-    "mac": {
-      "category": "public.app-category.medical",
-      "target": "dmg",
-      "asar": "true",
-      "asarUnpack": [
-        "**/build/sox/**/*"
-      ]
-    },
-    "linux": {
-      "asar": "true",
-      "asarUnpack": [
-        "**/build/sox/**/*"
-      ]
-    },
     "win": {
       "asar": "true",
       "asarUnpack": [

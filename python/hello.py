@@ -1,5 +1,5 @@
 import sys
 import zerorpc
 
-print('Hello from Python!')
-sys.stdout.flush()
+def hello(text):
+    return 'Hello from python'
