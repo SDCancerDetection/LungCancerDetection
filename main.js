@@ -3,8 +3,8 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 
-const PY_DIST_FOLDER = 'pycalcdist'
-const PY_FOLDER = 'pycalc'
+const PY_DIST_FOLDER = 'pythondist'
+const PY_FOLDER = 'pytho'
 const PY_MODULE = 'api' // without .py suffix
 
 const guessPackaged = () => {
