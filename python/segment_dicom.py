@@ -194,11 +194,14 @@ first_patient_pixels = get_pixels_hu(first_patient)
 plt.hist(first_patient_pixels.flatten(), bins=80, color='c')
 plt.xlabel("Hounsfield Units (HU)")
 plt.ylabel("Frequency")
+plt.savefig("SavedImages/plot.png")
 plt.show()
+
 
 if disp_images:
     # Show some slice in the middle
     plt.imshow(first_patient_pixels[80], cmap=plt.cm.gray)
+    plt.savefig("SavedImages/scan.png")
     plt.show()
 
     # Resample image to get pixel widths similar
@@ -210,6 +213,10 @@ if disp_images:
     # Print Lungs
     segmented_lungs = segment_lung_mask(pix_resampled, False)
     segmented_lungs_fill = segment_lung_mask(pix_resampled, True)
+
+    plt.imshow(segmented_lungs_fill[80], cmap=plt.cm.gray)
+    plt.savefig("SavedImages/segmented_scan_fill.png")
+    plt.show()
 
     plot_3d(segmented_lungs, 0)
     plot_3d(segmented_lungs_fill, 0)
