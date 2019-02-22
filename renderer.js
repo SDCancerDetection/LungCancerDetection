@@ -4,14 +4,15 @@ const zerorpc = require("zerorpc")
 let client = new zerorpc.Client()
 client.connect("tcp://127.0.0.1:4242")
 
-let formula = document.querySelector('#formula')
+let formula = document.querySelector('#button')
 let result = document.querySelector('#result')
-formula.addEventListener('input', () => {
-  client.invoke("hello", "hi", (error, res) => {
+formula.addEventListener('click', () => {
+  client.invoke("hello", document.querySelector('#formula').value, (error, res) => {
     if (error) {
       console.log(error)
     } else {
-      result.textContent = res
+      console.log(res)
+      //result.textContent = res
     }
   })
 })

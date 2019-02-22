@@ -162,57 +162,57 @@ def show_dcm_info(dataset):
     print("Patient id..........:", dataset.PatientID)
     print("Modality............:", dataset.Modality)
 
-
+# "C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\python\\dicom\\"
 # MAIN
+def main(url):
+    INPUT_FOLDER = url
+    patients = os.listdir(INPUT_FOLDER)
+    patients.sort()
 
-INPUT_FOLDER = "dicom\\"
-patients = os.listdir(INPUT_FOLDER)
-patients.sort()
+    file_path = INPUT_FOLDER + patients[0]
+    print(file_path)
+    disp_images = True
 
-file_path = INPUT_FOLDER + patients[0]
-print(file_path)
-disp_images = True
+    # Show histogram of HU values present in image
+    first_patient = load_scan(file_path)
 
-# Show histogram of HU values present in image
-first_patient = load_scan(file_path)
+    # Set up dataset with all patient information
+    i = 1
+    num_to_plot = 5
+    file = file_path
+    for file_name in os.listdir(file_path):
+        file = os.path.join(file_path, file_name)
+        dataset = pydicom.dcmread(file)
+        show_dcm_info(dataset)
 
-# Set up dataset with all patient information
-i = 1
-num_to_plot = 5
-file = file_path
-for file_name in os.listdir(file_path):
-    file = os.path.join(file_path, file_name)
-    dataset = pydicom.dcmread(file)
-    show_dcm_info(dataset)
-
-    if i >= num_to_plot:
-        break
-    i += 1
+        if i >= num_to_plot:
+            break
+        i += 1
 
 
-first_patient_pixels = get_pixels_hu(first_patient)
-plt.hist(first_patient_pixels.flatten(), bins=80, color='c')
-plt.xlabel("Hounsfield Units (HU)")
-plt.ylabel("Frequency")
-plt.show()
-
-if disp_images:
-    # Show some slice in the middle
-    plt.imshow(first_patient_pixels[80], cmap=plt.cm.gray)
+    first_patient_pixels = get_pixels_hu(first_patient)
+    plt.hist(first_patient_pixels.flatten(), bins=80, color='c')
+    plt.xlabel("Hounsfield Units (HU)")
+    plt.ylabel("Frequency")
     plt.show()
 
-    # Resample image to get pixel widths similar
-    pix_resampled, spacing = resample(first_patient_pixels, first_patient, [1, 1, 1])
+    if disp_images:
+        # Show some slice in the middle
+        plt.imshow(first_patient_pixels[80], cmap=plt.cm.gray)
+        plt.show()
 
-    # Plot in 3D the bone structure of the patient
-    plot_3d(pix_resampled, 400)
+        # Resample image to get pixel widths similar
+        pix_resampled, spacing = resample(first_patient_pixels, first_patient, [1, 1, 1])
 
-    # Print Lungs
-    segmented_lungs = segment_lung_mask(pix_resampled, False)
-    segmented_lungs_fill = segment_lung_mask(pix_resampled, True)
+        # Plot in 3D the bone structure of the patient
+        plot_3d(pix_resampled, 400)
 
-    plot_3d(segmented_lungs, 0)
-    plot_3d(segmented_lungs_fill, 0)
+        # Print Lungs
+        segmented_lungs = segment_lung_mask(pix_resampled, False)
+        segmented_lungs_fill = segment_lung_mask(pix_resampled, True)
 
-    # Plot difference
-    plot_3d(segmented_lungs_fill - segmented_lungs, 0)
+        plot_3d(segmented_lungs, 0)
+        plot_3d(segmented_lungs_fill, 0)
+
+        # Plot difference
+        plot_3d(segmented_lungs_fill - segmented_lungs, 0)

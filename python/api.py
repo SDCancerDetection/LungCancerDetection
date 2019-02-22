@@ -1,12 +1,12 @@
 from __future__ import print_function
-from hello import hello as hello_py
+from segment_dicom import main as segment_dicom
 import sys
 import zerorpc
 
 class PythonApi(object):
     def hello(self, text):
         try:
-            return hello_py(text);
+            return segment_dicom(text);
         except Exception as e:
             return 0.0
     def echo(self, text):
