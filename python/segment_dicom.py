@@ -164,36 +164,7 @@ def show_dcm_info(dataset):
 
 # "C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\python\\dicom\\"
 # MAIN
-def main(url):
-    INPUT_FOLDER = url
-    patients = os.listdir(INPUT_FOLDER)
-    patients.sort()
-
-    file_path = INPUT_FOLDER + patients[0]
-    print(file_path)
-    disp_images = True
-
-    # Show histogram of HU values present in image
-    first_patient = load_scan(file_path)
-
-    # Set up dataset with all patient information
-    i = 1
-    num_to_plot = 5
-    file = file_path
-    for file_name in os.listdir(file_path):
-        file = os.path.join(file_path, file_name)
-        dataset = pydicom.dcmread(file)
-        show_dcm_info(dataset)
-
-        if i >= num_to_plot:
-            break
-        i += 1
-
-
-    first_patient_pixels = get_pixels_hu(first_patient)
-    plt.hist(first_patient_pixels.flatten(), bins=80, color='c')
-    plt.xlabel("Hounsfield Units (HU)")
-    plt.ylabel("Frequency")
+def main():
     plt.show()
 
     if disp_images:
@@ -211,8 +182,12 @@ def main(url):
         segmented_lungs = segment_lung_mask(pix_resampled, False)
         segmented_lungs_fill = segment_lung_mask(pix_resampled, True)
 
-        plot_3d(segmented_lungs, 0)
-        plot_3d(segmented_lungs_fill, 0)
+    plt.imshow(segmented_lungs_fill[80], cmap=plt.cm.gray)
+    plt.savefig("SavedImages/segmented_scan_fill.png")
+    plt.show()
+
+    plot_3d(segmented_lungs, 0)
+    plot_3d(segmented_lungs_fill, 0)
 
         # Plot difference
         plot_3d(segmented_lungs_fill - segmented_lungs, 0)
