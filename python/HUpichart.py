@@ -2,7 +2,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 
-patch = ".\\test\\test_patch_0.05_R0.tiff"
+patch = ".\\test_patches\\test_patch_0.05_R0.tiff"
 
 
 # Show the plot of the image
