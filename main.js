@@ -4,7 +4,7 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 
 const PY_DIST_FOLDER = 'pythondist'
-const PY_FOLDER = 'pytho'
+const PY_FOLDER = 'python'
 const PY_MODULE = 'api' // without .py suffix
 
 const guessPackaged = () => {
@@ -68,11 +68,10 @@ const createPyProc = () => {
   if (guessPackaged()) {
     pyProc = require('child_process').execFile(script, [port])
   } else {
-    pyProc = require('child_process').spawn('python', [script, port])
+    pyProc = require('child_process').spawn('py', [script, port])
   }
 
   if (pyProc != null) {
-    //console.log(pyProc)
     console.log('child process success on port ' + port)
   }
 }

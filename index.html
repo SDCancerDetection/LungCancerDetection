@@ -1,4 +1,4 @@
-<!-- index.html -->
+<!-- index.html
 <!DOCTYPE html>
 <html>
   <head>
@@ -15,10 +15,137 @@
     <div id="button">SEND DATA</div>
   </body>
 
-  <script>
-    window.$ = window.jQuery = require('./jquery-3.3.1.min.js');
-  </script>
-  <script>
-    require('./renderer.js')
-  </script>
 </html>
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Senior Design Layout</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/* Style the header */
+.header {
+  background-color: #f1f1f1;
+  padding: 1px;
+  text-align: center;
+}
+
+/* Style the top navigation bar */
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+/* Style the topnav links */
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+  float: left;
+  padding: 10px;
+  height: 500px;
+}
+
+.left, .right {
+  width: 25%;
+}
+
+.middle {
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.btn-group .button {
+  background-color: #333;
+  border: 1px solid black;
+  color: white;
+  padding: 10px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  float: left;
+}
+
+.btn-group .button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+.btn-group .button:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>UI Design</h1>
+</div>
+
+<div class="topnav">
+  <input id="input-file" type="file" webkitdirectory />
+  <a href="#">Patient Information</a>
+  <a id="submit" href="javascript:void(0)">Navigation</a>
+</div>
+
+<div class="row">
+  <div class="column left" style="background-color:#aaa;">
+    <h2>Tools</h2>
+    <p>Other Patient information</p>
+  <div class="btn-group">
+  <button class="button">Voom In</button>
+  <button class="button">Voom Out</button>
+  <button class="button">Contrast</button>
+</div>
+<p style="clear:both"><br></p>
+</div>
+  <div class="column middle" style="background-color:#bbb;">
+    <h2>Main Scan Display</h2>
+    <img id="center-img" style="width: 100%; height: 100%;"  src="./python/SavedImages/segmented_scan_fill.png" />
+  </div>
+  <div class="column right" style="background-color:#ccc;">
+    <h2>Other Scan Display options</h2>
+  </div>
+</div>
+
+</body>
+</html>
+
+<script>
+  window.$ = window.jQuery = require('./jquery-3.3.1.min.js');
+</script>
+<script>
+  require('./renderer.js')
+</script>

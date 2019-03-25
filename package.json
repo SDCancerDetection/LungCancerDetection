@@ -13,9 +13,9 @@
   },
   "devDependencies": {
     "electron": "latest",
+    "electron-builder": "^20.38.5",
     "electron-packager": "^13.0.1",
-    "electron-rebuild": "^1.8.4",
-    "electron-builder": "^20.38.5"
+    "electron-rebuild": "^1.8.4"
   },
   "dependencies": {
     "node-gyp": "^3.8.0",

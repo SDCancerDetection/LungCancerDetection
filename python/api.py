@@ -1,14 +1,16 @@
 from __future__ import print_function
-from segment_dicom import main as segment_dicom
+from greenlet import greenlet
+import segment_dicom
+from segment_dicom import evaluate as eval
 import sys
 import zerorpc
 
 class PythonApi(object):
     def hello(self, text):
         try:
-            return segment_dicom(text);
+            return eval(text)
         except Exception as e:
-            return 0.0
+            return e
     def echo(self, text):
         return text
 
@@ -17,7 +19,7 @@ def parse_port():
 
 def main():
     addr = 'tcp://127.0.0.1:' + str(parse_port())
-    s = zerorpc.Server(PythonApi())
+    s = zerorpc.Server(PythonApi(), heartbeat=None)
     s.bind(addr)
     print('start running on {}'.format(addr))
     s.run()
