@@ -1,13 +1,15 @@
 import SimpleITK
 import numpy as np
 import os
+from PIL import Image
+import csv
 import scipy.ndimage
 import matplotlib.pyplot as plt
 
 # Constants
 PATCH_WIDTH = 64          # This is the number of pixels wanted in the final patch
 SLIDE_INCREMENT = 32       # Pixels to move sliding window between each patch
-directory = "E:\\Fall 2018\\EE4901\\CancerDetectionProgram\\Data\\test"
+directory = "E:\\Spring 2019\\EE4910\\LungCancerDetection\\python\\subset_ex"
 
 
 def load_itk_image(filename):
@@ -50,7 +52,7 @@ def show_image(image):
 
 
 # Given the file path to the image, search the CSV for any nodules that are related to that scan and display them.
-def get_patches(filepath):
+def get_patches(filepath, slice_filepath, csv_path):
     numpy_image, numpy_origin, numpy_spacing = load_itk_image(filepath)
     numpy_image, numpy_spacing = resample(numpy_image, numpy_spacing)
     numpy_image = normalize_planes(numpy_image)             # Converts pixels to HU values
@@ -58,24 +60,45 @@ def get_patches(filepath):
     slices, height, width = numpy_image.shape               # Get dimensions of the image
     w, h, s = 0, 0, 0                                       # Initialize loop counters to 0
     test = 0
+    # Open file to write csv data to for each patch
+    with open(csv_path + "\\data.csv", mode='w', newline='') as data_file:
+        data_writer = csv.writer(data_file, delimiter=',', quoting=csv.QUOTE_MINIMAL)       # Set up arguments
+        while s < slices:                                       # Go through each slice
+            while h < height - PATCH_WIDTH:                     # Go through y dir until bottom of image slice
+                while w < width - PATCH_WIDTH:                  # Go through x dir until right of image slice
 
-    while s < slices:                                       # Go through each slice
-        while h < height - PATCH_WIDTH:                     # Go through y dir until bottom of image slice
-            while w < width - PATCH_WIDTH:                  # Go through x dir until right of image slice
+                    patch = numpy_image[s, h:h + PATCH_WIDTH, w:w + PATCH_WIDTH]    # Get 64x64 px patch for prediction
+                    test += 1                                   # Random var for testing, replace with prediction value
+                    # TODO - ADD the code to test on this patch for ML algorithm
 
-                patch = numpy_image[s, h:h + PATCH_WIDTH, w:w + PATCH_WIDTH]    # Gets 64x64 pixel patch to test on
-                test += 1
-                # TODO - ADD the code to test on this patch for ML algorithm
-                w += SLIDE_INCREMENT
-            h += SLIDE_INCREMENT
-            w = 0
-        s += 1
-        h = 0
+                    # Write patch information to the CSV File
+                    data_writer.writerow([w, h, s, test])
+                    w += SLIDE_INCREMENT
+                h += SLIDE_INCREMENT
+                w = 0
+
+            # Save slice to tmp/slices folder
+            scan = numpy_image[s, :height, :width]
+            Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, str(s) + ".tiff"))
+            s += 1
+            h = 0
+
     print(test)
 
 
-# Print out the nodules for each file in the directory
+# Main
+
+# Code to make temp directories to save stuff in
+cwd = os.getcwd()
+tmp_path = cwd + "\\tmp"
+slice_path = tmp_path + "\\slices"
+if not os.path.exists(tmp_path):
+    os.mkdir(tmp_path)
+if not os.path.exists(slice_path):
+    os.mkdir(slice_path)
+
+# Run through all patches on all scans within directory
 for file_name in os.listdir(directory):
     file = os.path.join(directory, file_name)
     if ".mhd" in file_name:
-        get_patches(file)
+        get_patches(file, slice_path, tmp_path)
