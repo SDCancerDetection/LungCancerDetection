@@ -1,4 +1,4 @@
-# Convolutional Neural Network version 0.0.2_keras
+# Convolutional Neural Network version 0.0.4_random
 # Author: Joshua Stauffer
 # Created: 2/6/2019
 # Modified: 2/18/2019
@@ -18,7 +18,7 @@ CATEGORIES = ["Negative", "Positive"]
 training_data = [] #Training pairs
 randomPaths = []
 IMG_SIZE = 64
-NUMOFCASES = 10
+NUMOFCASES = 37248 #Max num of positive cases
 X = []	#Features
 y = []	#Labels
 
