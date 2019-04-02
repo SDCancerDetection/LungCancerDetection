@@ -5,11 +5,13 @@ from PIL import Image
 import csv
 import scipy.ndimage
 import matplotlib.pyplot as plt
+import tensorflow as tf
 
 # Constants
 PATCH_WIDTH = 64          # This is the number of pixels wanted in the final patch
 SLIDE_INCREMENT = 32       # Pixels to move sliding window between each patch
 directory = "E:\\Spring 2019\\EE4910\\LungCancerDetection\\python\\subset_ex"
+MODELDIR = "D:\\Josh Stauffer\\Documents\\Senior Design\\Cancer Detection Code\\models\\savedModels\\"
 
 
 def load_itk_image(filename):
@@ -69,10 +71,13 @@ def get_patches(filepath, slice_filepath, csv_path):
 
                     patch = numpy_image[s, h:h + PATCH_WIDTH, w:w + PATCH_WIDTH]    # Get 64x64 px patch for prediction
                     test += 1                                   # Random var for testing, replace with prediction value
-                    # TODO - ADD the code to test on this patch for ML algorithm
-
+					
+                    # Test patch with machine learning model that was loaded prior to
+                    prediction = model.predict(patch)           # Closer to 1, higher chance its cancer
+                    prediction = f"{prediction[0][0]:.3f}"      # Dereference array format for usability
+                    
                     # Write patch information to the CSV File
-                    data_writer.writerow([w, h, s, test])
+                    data_writer.writerow([w, h, s, prediction])
                     w += SLIDE_INCREMENT
                 h += SLIDE_INCREMENT
                 w = 0
@@ -97,6 +102,9 @@ if not os.path.exists(tmp_path):
 if not os.path.exists(slice_path):
     os.mkdir(slice_path)
 
+# Load machine learning model ahead of time
+model = tf.keras.models.load_model(MODELDIR + "CT-Patches-cnn-64x2-1552931682")
+    
 # Run through all patches on all scans within directory
 for file_name in os.listdir(directory):
     file = os.path.join(directory, file_name)
