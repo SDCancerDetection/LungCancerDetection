@@ -1,0 +1,4 @@
+npm install --global --production windows-build-tools
+
+#every time you run 'yarn install', you have to run this:
+./node_modules/.bin/electron-rebuild

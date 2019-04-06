@@ -6,7 +6,7 @@ import zerorpc
 class PythonApi(object):
     def hello(self, text):
         try:
-            return hello_py()
+            return hello_py(text);
         except Exception as e:
             return 0.0
     def echo(self, text):
@@ -16,8 +16,8 @@ def parse_port():
     return 4242
 
 def main():
-    addr = 'tcp://127.0.0.1:' + parse_port()
-    s = zerorpc.Server(CalcApi())
+    addr = 'tcp://127.0.0.1:' + str(parse_port())
+    s = zerorpc.Server(PythonApi())
     s.bind(addr)
     print('start running on {}'.format(addr))
     s.run()
