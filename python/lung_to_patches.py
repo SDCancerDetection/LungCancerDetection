@@ -61,7 +61,6 @@ def get_patches(filepath, slice_filepath, csv_path):
 
     slices, height, width = numpy_image.shape               # Get dimensions of the image
     w, h, s = 0, 0, 0                                       # Initialize loop counters to 0
-    test = 0
     # Open file to write csv data to for each patch
     with open(csv_path + "\\data.csv", mode='w', newline='') as data_file:
         data_writer = csv.writer(data_file, delimiter=',', quoting=csv.QUOTE_MINIMAL)       # Set up arguments
@@ -70,29 +69,38 @@ def get_patches(filepath, slice_filepath, csv_path):
                 while w < width - PATCH_WIDTH:                  # Go through x dir until right of image slice
 
                     patch = numpy_image[s, h:h + PATCH_WIDTH, w:w + PATCH_WIDTH]    # Get 64x64 px patch for prediction
-                    test += 1                                   # Random var for testing, replace with prediction value
-					
-                    # Test patch with machine learning model that was loaded prior to
+                   
+                     # Test patch with machine learning model that was loaded prior to
                     prediction = model.predict(patch)           # Closer to 1, higher chance its cancer
                     prediction = f"{prediction[0][0]:.3f}"      # Dereference array format for usability
-                    
+
                     # Write patch information to the CSV File
                     data_writer.writerow([w, h, s, prediction])
                     w += SLIDE_INCREMENT
                 h += SLIDE_INCREMENT
                 w = 0
 
-            # Save slice to tmp/slices folder
+            # Save Horizontal (Z) slice to tmp/slices folder. Convert to black and white and save jpg file
             scan = numpy_image[s, :height, :width]
-            Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, str(s) + ".tiff"))
+            Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "Z_" + str(s) + ".jpg"), "JPEG",
+                                                          quality=80, optimize=True, progressive=True)
             s += 1
             h = 0
 
-    print(test)
+    for x in range(0, width):
+        # Save Vertical (X) slice to tmp/slices folder. Convert to black and white and save jpg file
+        scan = numpy_image[:slices, :height, x]
+        Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "X_" + str(x) + ".jpg"), "JPEG",
+                                                      quality=80, optimize=True, progressive=True)
+
+    for y in range(0, height):
+        # Save Vertical (X) slice to tmp/slices folder. Convert to black and white and save jpg file
+        scan = numpy_image[:slices, y, :width]
+        Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "Y_" + str(y) + ".jpg"), "JPEG",
+                                                      quality=80, optimize=True, progressive=True)
 
 
 # Main
-
 # Code to make temp directories to save stuff in
 cwd = os.getcwd()
 tmp_path = cwd + "\\tmp"
@@ -101,10 +109,10 @@ if not os.path.exists(tmp_path):
     os.mkdir(tmp_path)
 if not os.path.exists(slice_path):
     os.mkdir(slice_path)
-
+ 
 # Load machine learning model ahead of time
 model = tf.keras.models.load_model(MODELDIR + "CT-Patches-cnn-64x2-1552931682")
-    
+
 # Run through all patches on all scans within directory
 for file_name in os.listdir(directory):
     file = os.path.join(directory, file_name)
