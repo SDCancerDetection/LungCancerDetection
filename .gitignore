@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Temp files
+tmp/
+
 # Distribution / packaging
 .Python
 pythondist/

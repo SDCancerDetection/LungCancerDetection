@@ -166,7 +166,6 @@ def show_dcm_info(dataset):
 # "C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\python\\dicom\\"
 
 def evaluate(path):
-    path2 = "C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\python\\dicom\\"
     INPUT_FOLDER = path + "\\"
     patients = os.listdir(INPUT_FOLDER)
     patients.sort()
@@ -192,7 +191,6 @@ def evaluate(path):
     plt.ylabel("Frequency")
     if not os.path.exists(path + "\\tempdata"):
         os.makedirs(path + "\\tempdata")
-#    if os.path.isfile("plot.png"):
-#       os.remove("plot.png")   # Opt.: os.system("rm "+strFile)
+
     plt.savefig(path + "\\tempdata\\plot.png")
     return path + "\\tempdata\\plot.png"

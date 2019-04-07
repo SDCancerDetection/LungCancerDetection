@@ -1,7 +1,8 @@
 from __future__ import print_function
-from greenlet import greenlet
 import segment_dicom
 from segment_dicom import evaluate as eval
+import lung_to_patches
+from lung_to_patches import setupDirectories as setup
 import sys
 import zerorpc
 
@@ -13,6 +14,11 @@ class PythonApi(object):
             return e
     def echo(self, text):
         return text
+    def dirSetup(self, text):
+        try:
+            return "C:\Users\Jonathan Lehto\Documents\GitHub\LungCancerDetection\tmp" #setup(text)
+        except Exception as e:
+            return e    
 
 def parse_port():
     return 4242

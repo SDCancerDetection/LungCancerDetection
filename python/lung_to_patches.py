@@ -5,12 +5,12 @@ from PIL import Image
 import csv
 import scipy.ndimage
 import matplotlib.pyplot as plt
+import random
 
 # Constants
 PATCH_WIDTH = 64          # This is the number of pixels wanted in the final patch
 SLIDE_INCREMENT = 32       # Pixels to move sliding window between each patch
-directory = "E:\\Spring 2019\\EE4910\\LungCancerDetection\\python\\subset_ex"
-
+#directory = "E:\\Spring 2019\\EE4910\\LungCancerDetection\\python\\subset_ex"
 
 def load_itk_image(filename):
     itk_image = SimpleITK.ReadImage(filename)
@@ -68,7 +68,7 @@ def get_patches(filepath, slice_filepath, csv_path):
                 while w < width - PATCH_WIDTH:                  # Go through x dir until right of image slice
 
                     patch = numpy_image[s, h:h + PATCH_WIDTH, w:w + PATCH_WIDTH]    # Get 64x64 px patch for prediction
-                    test += 1                                   # Random var for testing, replace with prediction value
+                    test = random.random()                                   # Random var for testing, replace with prediction value
                     # TODO - ADD the code to test on this patch for ML algorithm
 
                     # Write patch information to the CSV File
@@ -80,6 +80,17 @@ def get_patches(filepath, slice_filepath, csv_path):
             # Save slice to tmp/slices folder
             scan = numpy_image[s, :height, :width]
             Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, str(s) + ".tiff"))
+            im = Image.open(os.path.join(slice_filepath, str(s) + ".tiff"))
+ 
+            if os.path.isfile(os.path.join(slice_filepath, str(s) + ".jpg")):
+                print("A jpeg file already exists for")
+            else:
+                outfile = os.path.join(slice_filepath, str(s) + ".jpg")
+                try:
+                    im.save(outfile, "JPEG", quality=100)
+                except Exception as e:
+                    print(e)
+
             s += 1
             h = 0
 
@@ -87,18 +98,20 @@ def get_patches(filepath, slice_filepath, csv_path):
 
 
 # Main
-
 # Code to make temp directories to save stuff in
-cwd = os.getcwd()
-tmp_path = cwd + "\\tmp"
-slice_path = tmp_path + "\\slices"
-if not os.path.exists(tmp_path):
-    os.mkdir(tmp_path)
-if not os.path.exists(slice_path):
-    os.mkdir(slice_path)
+def setupDirectories(text):
+    directory = text #"C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\python\\example_subset_raw"
+    cwd = os.getcwd()
+    tmp_path = cwd + "\\tmp"
+    slice_path = tmp_path + "\\slices"
+    if not os.path.exists(tmp_path):
+        os.mkdir(tmp_path)
+    if not os.path.exists(slice_path):
+        os.mkdir(slice_path)
 
-# Run through all patches on all scans within directory
-for file_name in os.listdir(directory):
-    file = os.path.join(directory, file_name)
-    if ".mhd" in file_name:
-        get_patches(file, slice_path, tmp_path)
+    # Run through all patches on all scans within directory
+    for file_name in os.listdir(directory):
+        file = os.path.join(directory, file_name)
+        if ".mhd" in file_name:
+            get_patches(file, slice_path, tmp_path)
+    return tmp_path
