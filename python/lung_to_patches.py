@@ -92,10 +92,23 @@ def get_patches(filepath, slice_filepath, csv_path):
 
             # Save slice to tmp/slices folder
             scan = numpy_image[s, :height, :width]
-            Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, str(s) + ".tiff"))
+            Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "Z_" + str(s) + ".jpg"), "JPEG",
+                                                          quality=80, optimize=True, progressive=True)
             s += 1
             h = 0
         #print("End: %Y-%m-%d %H:%M:%S", gmtime()) #Uncomment for timelapse
+       
+    for x in range(0, width):
+        # Save Vertical (X) slice to tmp/slices folder. Convert to black and white and save jpg file
+        scan = numpy_image[:slices, :height, x]
+        Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "X_" + str(x) + ".jpg"), "JPEG",
+                                                      quality=80, optimize=True, progressive=True)
+
+    for y in range(0, height):
+        # Save Vertical (X) slice to tmp/slices folder. Convert to black and white and save jpg file
+        scan = numpy_image[:slices, y, :width]
+        Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "Y_" + str(y) + ".jpg"), "JPEG",
+                                                      quality=80, optimize=True, progressive=True)
 
 # Main
 
