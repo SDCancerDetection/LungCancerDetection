@@ -6,11 +6,14 @@ import csv
 import scipy.ndimage
 import matplotlib.pyplot as plt
 import tensorflow as tf
+import cv2
+import time
+from time import gmtime, strftime
 
 # Constants
 PATCH_WIDTH = 64          # This is the number of pixels wanted in the final patch
 SLIDE_INCREMENT = 32       # Pixels to move sliding window between each patch
-directory = "E:\\Spring 2019\\EE4910\\LungCancerDetection\\python\\subset_ex"
+directory = "D:\\Josh Stauffer\\Documents\\Senior Design\\GitCode\\LungCancerDetection\\python\\subset_ex"
 MODELDIR = "D:\\Josh Stauffer\\Documents\\Senior Design\\Cancer Detection Code\\models\\savedModels\\"
 
 
@@ -36,7 +39,13 @@ def resample(image, spacing):
     image = scipy.ndimage.interpolation.zoom(image, real_resize_factor, mode='nearest')
     return image, new_spacing
 
-
+def prepare(img_array):
+    #This prepares the patch for the model to predict on
+    IMG_SIZE = 64
+    new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
+    new_array = new_array/255 #uncomment for float point
+    return new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+    
 def normalize_planes(npz_array):
     max_hu = 400
     min_hu = -1000
@@ -61,19 +70,18 @@ def get_patches(filepath, slice_filepath, csv_path):
 
     slices, height, width = numpy_image.shape               # Get dimensions of the image
     w, h, s = 0, 0, 0                                       # Initialize loop counters to 0
-    test = 0
     # Open file to write csv data to for each patch
     with open(csv_path + "\\data.csv", mode='w', newline='') as data_file:
         data_writer = csv.writer(data_file, delimiter=',', quoting=csv.QUOTE_MINIMAL)       # Set up arguments
+        #print("Start: %Y-%m-%d %H:%M:%S", gmtime()) #Uncomment for timelapse
         while s < slices:                                       # Go through each slice
             while h < height - PATCH_WIDTH:                     # Go through y dir until bottom of image slice
                 while w < width - PATCH_WIDTH:                  # Go through x dir until right of image slice
 
                     patch = numpy_image[s, h:h + PATCH_WIDTH, w:w + PATCH_WIDTH]    # Get 64x64 px patch for prediction
-                    test += 1                                   # Random var for testing, replace with prediction value
-					
+                    
                     # Test patch with machine learning model that was loaded prior to
-                    prediction = model.predict(patch)           # Closer to 1, higher chance its cancer
+                    prediction = model.predict(prepare(patch))  # Closer to 1, higher chance its cancer
                     prediction = f"{prediction[0][0]:.3f}"      # Dereference array format for usability
                     
                     # Write patch information to the CSV File
@@ -87,9 +95,7 @@ def get_patches(filepath, slice_filepath, csv_path):
             Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, str(s) + ".tiff"))
             s += 1
             h = 0
-
-    print(test)
-
+        #print("End: %Y-%m-%d %H:%M:%S", gmtime()) #Uncomment for timelapse
 
 # Main
 
