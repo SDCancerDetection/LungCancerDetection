@@ -1,4 +1,5 @@
 const zerorpc = require("zerorpc")
+const panzoom = require("panzoom")
 let client = new zerorpc.Client({ timeout: 600, heartbeatInterval: 6000000 })
 client.connect("tcp://127.0.0.1:4242")
 
@@ -22,7 +23,6 @@ function generateHTML() {
     for (var ind_patch in data) {
         slices[data[ind_patch].z_coord] = '';
     }
-
 
     for (var ind_patch in data) {
         slices[data[ind_patch].z_coord] += '<div style="position:absolute;top:' + data[ind_patch].y_coord + 'px;left:' + data[ind_patch].x_coord + 'px; width: 64px; height: 64px; background:rgba(255,0,0,' + (data[ind_patch].cancer_perc / 4) + ');"></div>'
@@ -54,7 +54,6 @@ function generateHTML() {
 						<h2>Other Scan Display options</h2>\
 					</div>\
 				</div>'
-        console.log((i / slice_count) * 100)
         document.querySelector('#scan-container').insertAdjacentHTML('beforeend', htmlStr);
     }
 

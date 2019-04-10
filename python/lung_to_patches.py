@@ -14,7 +14,6 @@ SLIDE_INCREMENT = 32       # Pixels to move sliding window between each patch
 #directory = "E:\\Spring 2019\\EE4910\\LungCancerDetection\\python\\subset_ex"
 #MODELDIR = "\\savedModels\\"
 
-
 def load_itk_image(filename):
     itk_image = SimpleITK.ReadImage(filename)
 
@@ -23,7 +22,6 @@ def load_itk_image(filename):
     numpy_spacing = np.array(list(reversed(itk_image.GetSpacing())))
 
     return numpy_image, numpy_origin, numpy_spacing
-
 
 # Takes 3D image and resample to make the spacing between pixels equal to "new_spacing"
 def resample(image, spacing):
@@ -37,7 +35,6 @@ def resample(image, spacing):
     image = scipy.ndimage.interpolation.zoom(image, real_resize_factor, mode='nearest')
     return image, new_spacing
 
-
 def normalize_planes(npz_array):
     max_hu = 400
     min_hu = -1000
@@ -47,12 +44,10 @@ def normalize_planes(npz_array):
     npz_array[npz_array < 0] = 0.
     return npz_array
 
-
 # Show the plot of the image
 def show_image(image):
     plt.imshow(image, cmap="gray")
     plt.show()
-
 
 # Given the file path to the image, search the CSV for any nodules that are related to that scan and display them.
 def get_patches(filepath, slice_filepath, csv_path):
@@ -71,7 +66,7 @@ def get_patches(filepath, slice_filepath, csv_path):
 
                     patch = numpy_image[s, h:h + PATCH_WIDTH, w:w + PATCH_WIDTH]    # Get 64x64 px patch for prediction
                    
-                     # Test patch with machine learning model that was loaded prior to
+                    # Test patch with machine learning model that was loaded prior to
                     prediction = model.predict(patch)           # Closer to 1, higher chance its cancer
                     prediction = f"{prediction[0][0]:.3f}"      # Dereference array format for usability
 
@@ -83,18 +78,6 @@ def get_patches(filepath, slice_filepath, csv_path):
 
             # Save Horizontal (Z) slice to tmp/slices folder. Convert to black and white and save jpg file
             scan = numpy_image[s, :height, :width]
-"""            Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, str(s) + ".tiff"))
-            im = Image.open(os.path.join(slice_filepath, str(s) + ".tiff"))
- 
-            if os.path.isfile(os.path.join(slice_filepath, str(s) + ".jpg")):
-                print("A jpeg file already exists for")
-            else:
-                outfile = os.path.join(slice_filepath, str(s) + ".jpg")
-                try:
-                    im.save(outfile, "JPEG", quality=100)
-                except Exception as e:
-                    print(e)
-"""
             Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "Z_" + str(s) + ".jpg"), "JPEG",
                                                           quality=100, optimize=True, progressive=True)
             s += 1
@@ -133,3 +116,16 @@ for file_name in os.listdir(directory):
     if ".mhd" in file_name:
         get_patches(file, slice_path, tmp_path)
 #    return tmp_path
+
+"""            Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, str(s) + ".tiff"))
+            im = Image.open(os.path.join(slice_filepath, str(s) + ".tiff"))
+ 
+            if os.path.isfile(os.path.join(slice_filepath, str(s) + ".jpg")):
+                print("A jpeg file already exists for")
+            else:
+                outfile = os.path.join(slice_filepath, str(s) + ".jpg")
+                try:
+                    im.save(outfile, "JPEG", quality=100)
+                except Exception as e:
+                    print(e)
+"""
