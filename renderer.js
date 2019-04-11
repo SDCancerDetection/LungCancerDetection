@@ -10,6 +10,32 @@ $(file_selector).change(function () {
     generateHTML();
 });
 
+let play = document.querySelector('#run');
+$(play).on("click", function () {
+    timerLoop();
+})
+
+var i = 0;
+function timerLoop() {
+    $(".x-1").show();
+    $(".y-1").show();
+    
+    setTimeout(function () {
+        //let current = document.querySelector('.z-' + i + '');
+        //let next = document.querySelector('.z-' + (i + 1) + '');
+        $(".z-" + i + "").each(function (item) {
+            $(this).fadeOut(100);
+        });
+        $(".z-" + (i + 1) + "").each(function (item) {
+            $(this).fadeIn(100);
+        });
+      i++;
+      if (i < slice_count - 1) {
+         timerLoop();
+      }
+   }, 500)
+}
+
 function generateHTML() {
     var res = "C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\tmp\\data.csv";
 
@@ -25,49 +51,19 @@ function generateHTML() {
     }
 
     for (var ind_patch in data) {
-        slices[data[ind_patch].z_coord] += '<div style="position:absolute;top:' + data[ind_patch].y_coord + 'px;left:' + data[ind_patch].x_coord + 'px; width: 64px; height: 64px; background:rgba(255,0,0,' + (data[ind_patch].cancer_perc / 4) + ');"></div>'
+        slices[data[ind_patch].z_coord] += '<div class="z-' + data[ind_patch].z_coord + ' x-' + data[ind_patch].x_coord + ' y-' + data[ind_patch].y_coord + '" style="z-index: 999;display: none; position:absolute;top:' + data[ind_patch].y_coord + 'px;left:' + data[ind_patch].x_coord + 'px; width: 64px; height: 64px; background:rgba(255,0,0,' + (data[ind_patch].cancer_perc / 4) + ');"></div>'
     }
-
-    console.log(slices);
 
     for (var i = 0; i < slice_count; i++) {
-
-        var htmlStr = '<div style="" class="row ' + i + '-th">\
-					<div class="column left" style="background-color:#aaa;">\
-						<h2>Tools</h2>\
-						<p>Other Patient information</p>\
-					<div class="btn-group">\
-					<button class="button">Zoom In</button>\
-					<button class="button">Zoom Out</button>\
-					<button class="button">Contrast</button>\
-				</div>\
-				<p style="clear:both"><br></p>\
-				</div>\
-					<div class="column middle" style="background-color:#bbb;">\
-						<h2>Main Scan Display</h2>\
-						<div id="patch-container">\
-						' + slices[i] + '\
-						</div>\
-						<img id="center-img" style="width: 100%; height: 100%;"  src="./tmp/slices/' + i + '.jpg" />\
-					</div>\
-					<div class="column right" style="background-color:#ccc;">\
-						<h2>Other Scan Display options</h2>\
-					</div>\
-				</div>'
-        document.querySelector('#scan-container').insertAdjacentHTML('beforeend', htmlStr);
+        var htmlStr = '' + slices[i] + '<img style="z-index: 1;position: absolute; display:none;" class="z-' + i + '" src="./tmp/slices/Z_' + i + '.jpg" />';
+        document.querySelector('.slice-container').insertAdjacentHTML('beforeend', htmlStr);
     }
 
-
-
-	/*client.invoke("dirSetup", document.getElementById("input-file").files[0].path, (error, res) => {
-		if (error) {
-			console.log(error)
-		} else {
-			
-//      let img = document.querySelector('#center-img');
-//      img.src = res + "?t=" + new Date().getTime();
-		}
-	})*/
+    for (var i = 0; i < 390; i++) {
+        var htmlStr = '<img style="display:none;" class="x-y-image x-' + i + '" src="./tmp/slices/X_' + i + '.jpg" />\
+                    <img style="display:none;" class="x-y-image y-' + i + '" src="./tmp/slices/Y_' + i + '.jpg" />';
+        document.querySelector('.x-y-images').insertAdjacentHTML('beforeend', htmlStr);
+    }
 }
 
 function generateCSV(location) {
@@ -75,7 +71,30 @@ function generateCSV(location) {
     let input = fs.readFileSync(location);
     var inputText = Utf8ArrayToStr(input);
     var lines = inputText.split('\n');
+    var patches = [lines.length];
 
+    for (var i in lines) {
+        var values = lines[i].split(',');
+        for (var j in values) {
+            values[j] = values[j].replace(/\"/g, '');
+        }
+
+        var patch = {
+            x_coord: values[0],
+            y_coord: values[1],
+            z_coord: values[2],
+            cancer_perc: values[3],
+        };
+
+        if (values[2] > slice_count) {
+            slice_count = values[2];
+        }
+
+        patches[i] = patch;
+    }
+
+    return patches;
+/*
     var patches = lines.map(function (line) {
 
         var values = line.split(',');
@@ -97,7 +116,7 @@ function generateCSV(location) {
         return patch;
     });
 
-    return patches;
+    return patches;*/
 }
 
 function Utf8ArrayToStr(array) {

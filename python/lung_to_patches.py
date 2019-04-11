@@ -5,8 +5,12 @@ from PIL import Image
 import csv
 import scipy.ndimage
 import matplotlib.pyplot as plt
-import random
 import tensorflow as tf
+import cv2
+import time
+import random
+from time import gmtime, strftime
+
 
 # Constants
 PATCH_WIDTH = 64          # This is the number of pixels wanted in the final patch
@@ -35,6 +39,13 @@ def resample(image, spacing):
     image = scipy.ndimage.interpolation.zoom(image, real_resize_factor, mode='nearest')
     return image, new_spacing
 
+def prepare(img_array):
+    #This prepares the patch for the model to predict on
+    IMG_SIZE = 64
+    new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
+    new_array = new_array/255 #uncomment for float point
+    return new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+
 def normalize_planes(npz_array):
     max_hu = 400
     min_hu = -1000
@@ -60,40 +71,42 @@ def get_patches(filepath, slice_filepath, csv_path):
     # Open file to write csv data to for each patch
     with open(csv_path + "\\data.csv", mode='w', newline='') as data_file:
         data_writer = csv.writer(data_file, delimiter=',', quoting=csv.QUOTE_MINIMAL)       # Set up arguments
+        #print("Start: %Y-%m-%d %H:%M:%S", gmtime()) #Uncomment for timelapse
         while s < slices:                                       # Go through each slice
             while h < height - PATCH_WIDTH:                     # Go through y dir until bottom of image slice
                 while w < width - PATCH_WIDTH:                  # Go through x dir until right of image slice
 
                     patch = numpy_image[s, h:h + PATCH_WIDTH, w:w + PATCH_WIDTH]    # Get 64x64 px patch for prediction
-                   
+                    
                     # Test patch with machine learning model that was loaded prior to
-                    prediction = model.predict(patch)           # Closer to 1, higher chance its cancer
-                    prediction = f"{prediction[0][0]:.3f}"      # Dereference array format for usability
-
+#                    prediction = model.predict(prepare(patch))  # Closer to 1, higher chance its cancer
+                    prediction = f"{random.uniform(0, 1):.3f}"      # Dereference array format for usability
+                    
                     # Write patch information to the CSV File
                     data_writer.writerow([w, h, s, prediction])
                     w += SLIDE_INCREMENT
                 h += SLIDE_INCREMENT
                 w = 0
 
-            # Save Horizontal (Z) slice to tmp/slices folder. Convert to black and white and save jpg file
+            # Save slice to tmp/slices folder
             scan = numpy_image[s, :height, :width]
             Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "Z_" + str(s) + ".jpg"), "JPEG",
-                                                          quality=100, optimize=True, progressive=True)
+                                                          quality=80, optimize=True, progressive=True)
             s += 1
             h = 0
-
+        #print("End: %Y-%m-%d %H:%M:%S", gmtime()) #Uncomment for timelapse
+       
     for x in range(0, width):
         # Save Vertical (X) slice to tmp/slices folder. Convert to black and white and save jpg file
         scan = numpy_image[:slices, :height, x]
         Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "X_" + str(x) + ".jpg"), "JPEG",
-                                                      quality=100, optimize=True, progressive=True)
+                                                      quality=80, optimize=True, progressive=True)
 
     for y in range(0, height):
         # Save Vertical (X) slice to tmp/slices folder. Convert to black and white and save jpg file
         scan = numpy_image[:slices, y, :width]
         Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, "Y_" + str(y) + ".jpg"), "JPEG",
-                                                      quality=100, optimize=True, progressive=True)
+                                                      quality=80, optimize=True, progressive=True)
 
 # Main
 # Code to make temp directories to save stuff in
