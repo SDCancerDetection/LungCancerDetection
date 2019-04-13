@@ -79,12 +79,14 @@ def get_patches(filepath, slice_filepath, csv_path):
                     patch = numpy_image[s, h:h + PATCH_WIDTH, w:w + PATCH_WIDTH]    # Get 64x64 px patch for prediction
                     
                     # Test patch with machine learning model that was loaded prior to
-#                    prediction = model.predict(prepare(patch))  # Closer to 1, higher chance its cancer
-                    prediction = f"{random.uniform(0, 1):.3f}"      # Dereference array format for usability
-                    
-                    # Write patch information to the CSV File
-                    data_writer.writerow([w, h, s, prediction])
+                    prediction = model.predict(prepare(patch))  # Closer to 1, higher chance its cancer
+                    if prediction[0][0] > 0.1:
+                        prediction = f"{prediction[0][0]:.3f}"      # Dereference array format for usability
+                        
+                        # Write patch information to the CSV File
+                        data_writer.writerow([w, h, s, prediction])
                     w += SLIDE_INCREMENT
+                
                 h += SLIDE_INCREMENT
                 w = 0
 
@@ -95,6 +97,7 @@ def get_patches(filepath, slice_filepath, csv_path):
             s += 1
             h = 0
         #print("End: %Y-%m-%d %H:%M:%S", gmtime()) #Uncomment for timelapse
+        data_writer.writerow([width, height, slices, "0"])
        
     for x in range(0, width):
         # Save Vertical (X) slice to tmp/slices folder. Convert to black and white and save jpg file
@@ -110,7 +113,7 @@ def get_patches(filepath, slice_filepath, csv_path):
 
 # Main
 # Code to make temp directories to save stuff in
-#def setupDirectories(text):
+#def setupDirectories(text, ml_alg):
 directory = "C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\python\\example_subset_raw\\scan_1"
 cwd = os.getcwd()
 tmp_path = cwd + "\\tmp"
@@ -120,8 +123,12 @@ if not os.path.exists(tmp_path):
 if not os.path.exists(slice_path):
     os.mkdir(slice_path)
 
-# Load machine learning model ahead of time
-model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-1552931682")
+if ml_alg == 1:
+    model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-1552931682")
+else if ml_alg == 2:
+    model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-1552931682")
+else if ml_alg == 3:
+    model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-1552931682")
 
 # Run through all patches on all scans within directory
 for file_name in os.listdir(directory):
@@ -129,16 +136,3 @@ for file_name in os.listdir(directory):
     if ".mhd" in file_name:
         get_patches(file, slice_path, tmp_path)
 #    return tmp_path
-
-"""            Image.fromarray(scan * 255).convert("L").save(os.path.join(slice_filepath, str(s) + ".tiff"))
-            im = Image.open(os.path.join(slice_filepath, str(s) + ".tiff"))
- 
-            if os.path.isfile(os.path.join(slice_filepath, str(s) + ".jpg")):
-                print("A jpeg file already exists for")
-            else:
-                outfile = os.path.join(slice_filepath, str(s) + ".jpg")
-                try:
-                    im.save(outfile, "JPEG", quality=100)
-                except Exception as e:
-                    print(e)
-"""
