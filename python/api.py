@@ -1,24 +1,17 @@
 from __future__ import print_function
-import segment_dicom
-from segment_dicom import evaluate as eval
 import lung_to_patches
 from lung_to_patches import setupDirectories as setup
 import sys
 import zerorpc
 
 class PythonApi(object):
-    def hello(self, text):
-        try:
-            return eval(text)
-        except Exception as e:
-            return e
     def echo(self, text):
         return text
-    def dirSetup(self, text):
+    def dirSetup(self, text, ml_alg):
         try:
-            return "C:\Users\Jonathan Lehto\Documents\GitHub\LungCancerDetection\tmp" #setup(text)
+            return setup(text, ml_alg)
         except Exception as e:
-            return e    
+            return e
 
 def parse_port():
     return 4242

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Senior Design Layout</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script>
+  function magnify(imgID, zoom) {
+    var img, glass, w, h, bw;
+    img = document.getElementById(imgID);
+    /*create magnifier glass:*/
+    glass = document.createElement("DIV");
+    glass.setAttribute("class", "img-magnifier-glass");
+    glass.setAttribute("id", "magnifier");
+    /*insert magnifier glass:*/
+    img.parentElement.insertBefore(glass, img);
+    /*set background properties for the magnifier glass:*/
+    glass.style.backgroundImage = "url('" + img.src + "')";
+    glass.style.backgroundRepeat = "no-repeat";
+    glass.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
+    bw = 3;
+    w = glass.offsetWidth / 2;
+    h = glass.offsetHeight / 2;
+    /*execute a function when someone moves the magnifier glass over the image:*/
+    glass.addEventListener("mousemove", moveMagnifier);
+    img.addEventListener("mousemove", moveMagnifier);
+    /*and also for touch screens:*/
+    glass.addEventListener("touchmove", moveMagnifier);
+    img.addEventListener("touchmove", moveMagnifier);
+    function moveMagnifier(e) {
+      var pos, x, y;
+      /*prevent any other actions that may occur when moving over the image*/
+      e.preventDefault();
+      /*get the cursor's x and y positions:*/
+      pos = getCursorPos(e);
+      x = pos.x;
+      y = pos.y;
+      /*prevent the magnifier glass from being positioned outside the image:*/
+      if (x > img.width - (w / zoom)) {x = img.width - (w / zoom);}
+      if (x < w / zoom) {x = w / zoom;}
+      if (y > img.height - (h / zoom)) {y = img.height - (h / zoom);}
+      if (y < h / zoom) {y = h / zoom;}
+      /*set the position of the magnifier glass:*/
+      glass.style.left = (x - w) + "px";
+      glass.style.top = (y - h) + "px";
+      /*display what the magnifier glass "sees":*/
+      glass.style.backgroundPosition = "-" + ((x * zoom) - w + bw) + "px -" + ((y * zoom) - h + bw) + "px";
+    }
+    function getCursorPos(e) {
+      var a, x = 0, y = 0;
+      e = e || window.event;
+      /*get the x and y positions of the image:*/
+      a = img.getBoundingClientRect();
+      /*calculate the cursor's x and y coordinates, relative to the image:*/
+      x = e.pageX - a.left;
+      y = e.pageY - a.top;
+      /*consider any page scrolling:*/
+      x = x - window.pageXOffset;
+      y = y - window.pageYOffset;
+      return {x : x, y : y};
+    }
+  }
+  function toggleMagnifier() {
+      var x = document.getElementById('magnifier');
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        x.style.zIndex = 1000;
+      } else {
+        x.style.display = "none";
+        x.style.zIndex = 0;
+      }
+    }
+  function changeContrast() {
+    var contrast = document.getElementById("contrastSlider").value
+    $("#myimage").css("-webkit-filter","contrast(" + contrast + "%)" );
+    $("#magnifier").css("-webkit-filter","contrast(" + contrast + "%)" );
+    updateContrastValue();
+  }
+
+  function updateContrastValue() {
+    var sliderValue = document.getElementById("contrastSlider").value;
+    document.getElementById("demo").innerHTML = sliderValue;
+  }
+
+</script>
+<style>
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+
+/* Style the top navigation bar */
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+/* Style the topnav links */
+.topnav a {
+  float: left;
+  display: block;
+  color: #FFD800;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: #FFD800;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+  background-color: #FFD800;
+  color: black;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropdown-content a {
+  float: none;
+  color: #FFD800;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #FFD800;
+  color: black;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+  float: left;
+  padding: 10px;
+  height: 500px;
+}
+.left, .right {
+  width: 25%;
+}
+.middle {
+  width: 50%;
+}
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.btn {
+  background-color: #FFD800;
+  border: none;
+  color: black;
+  padding: 10px 14px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 2px 2px;
+  cursor: pointer;
+  display: inline-block;
+  bottom: 100px;
+  border-radius: 15px;
+}
+
+.btn:hover {
+  background-color: #333;
+  color: #FFD800;
+}
+
+.img-magnifier-container {
+  position: relative;
+}
+
+.img-magnifier-glass {
+  position: absolute;
+  border: 3px solid #000;
+  border-radius: 50%;
+  cursor: none;
+  /*Set the size of the magnifier glass:*/
+  width: 200px;
+  height: 200px;
+}
+
+#magnifier {
+  display: none;
+}
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 23px;
+  height: 24px;
+  border-radius: 50%;
+  background: #FFD800;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 23px;
+  height: 24px;
+  borde-radius: 50%;
+  background: #FFD800;
+  cursor: pointer;
+}
+
+#test {
+    width: 300px;
+    margin: 15px;
+   float:left;
+ }
+</style>
+</head>
+<body>
+
+
+<div class="topnav">
+  <a href="#"><i style="font-size:24px" class="fa">&#xf07c;</i></a>
+  <a href="#"><i style="font-family:arial;font-style:normal";</i> SCAN TWO</a>
+  <a href="#">SCAN THREE</a>
+  <div class="dropdown">
+    <button class="dropbtn"> MODEL
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="#">ALGORITHM 1</a>
+      <a href="#">ALGORITHM 2</a>
+      <a href="#">ALGORITHM 3</a>
+    </div>
+  </div> 
+</div>
+</div>
+
+<div class="row">
+  <div class="column left" style="background-color:#333;">
+       <p>
+     <form action="/action_page.php">
+  <label><i style="font-family:arial;font-style:normal;color:#FFD800">Slice:<i/></label>
+  <input type="text" name="slice" value="">
+<button class="btn"><i style="font-family:arial;font-style:normal;font-size:16px"class="submit">Submit</i></button>
+</form> 
+    <br>
+	<label><i style='font-size:24px;color:#FFD800' class='fas'>&#xf481;</i></label>
+          <textarea> 
+	</textarea>
+        <p> <i style='font-size:24px;color:#FFD800' class="material-icons">&#xe85f;</i>
+        </p>
+        </p>
+  <button class="btn" onclick="toggleMagnifier()"><i style='font-size:16px' class='fas'>&#xf00e;</i></button>
+  <button class="btn"><i class='fas'>&#xf545;</i></button>
+  <div class="slidecontainer" id="contrast">
+    <p><label><i style='color:#FFD800' class="material-icons">&#xe3ab;</i></label>
+    <input type="range" min="1" max="300" value="100" class="slider" name="contrast" id="contrastSlider" onchange="changeContrast()"></p>
+</div>
+
+<p style="clear:both"><br></p>
+</div>
+  <div id="myimagediv" class="column middle img-magnifier-container" style="background-color:#bbb;">
+    <img id="myimage" src="guinea_glasses.jpg" width="600" height="400" style="margin-left: 50px;">
+  </div>
+  <div class="column right" style="background-color:#ccc;">
+  </div>
+</div>
+<script>
+  /* Initiate Magnify Function
+  with the id of the image, and the strength of the magnifier glass:*/
+  magnify("myimage", 3);
+  </script>
+</body>
+</html>

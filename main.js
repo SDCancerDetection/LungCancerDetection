@@ -16,9 +16,11 @@ const getScriptPath = () => {
   if (!guessPackaged()) {
     return path.join(__dirname, PY_FOLDER, PY_MODULE + '.py')
   }
+
   if (process.platform === 'win32') {
     return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE + '.exe')
   }
+
   return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE)
 }
 
@@ -68,7 +70,7 @@ const createPyProc = () => {
   if (guessPackaged()) {
     pyProc = require('child_process').execFile(script, [port])
   } else {
-    pyProc = require('child_process').spawn('py', [script, port])
+    pyProc = require('child_process').spawn('python', [script, port])
   }
 
   if (pyProc != null) {

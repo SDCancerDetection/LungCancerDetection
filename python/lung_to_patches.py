@@ -5,12 +5,12 @@ from PIL import Image
 import csv
 import scipy.ndimage
 import matplotlib.pyplot as plt
+import platform
 import tensorflow as tf
 import cv2
 import time
 import random
 from time import gmtime, strftime
-
 
 # Constants
 PATCH_WIDTH = 64          # This is the number of pixels wanted in the final patch
@@ -43,7 +43,6 @@ def prepare(img_array):
     #This prepares the patch for the model to predict on
     IMG_SIZE = 64
     new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
-    new_array = new_array/255 #uncomment for float point
     return new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)
 
 def normalize_planes(npz_array):
@@ -61,7 +60,7 @@ def show_image(image):
     plt.show()
 
 # Given the file path to the image, search the CSV for any nodules that are related to that scan and display them.
-def get_patches(filepath, slice_filepath, csv_path):
+def get_patches(filepath, slice_filepath, csv_path, model):
     numpy_image, numpy_origin, numpy_spacing = load_itk_image(filepath)
     numpy_image, numpy_spacing = resample(numpy_image, numpy_spacing)
     numpy_image = normalize_planes(numpy_image)             # Converts pixels to HU values
@@ -81,8 +80,7 @@ def get_patches(filepath, slice_filepath, csv_path):
                     # Test patch with machine learning model that was loaded prior to
                     prediction = model.predict(prepare(patch))  # Closer to 1, higher chance its cancer
                     if prediction[0][0] > 0.1:
-                        prediction = f"{prediction[0][0]:.3f}"      # Dereference array format for usability
-                        
+                        prediction = f"{prediction[0][0]:.3f}"  # Dereference array format for usability
                         # Write patch information to the CSV File
                         data_writer.writerow([w, h, s, prediction])
                     w += SLIDE_INCREMENT
@@ -97,7 +95,7 @@ def get_patches(filepath, slice_filepath, csv_path):
             s += 1
             h = 0
         #print("End: %Y-%m-%d %H:%M:%S", gmtime()) #Uncomment for timelapse
-        data_writer.writerow([width, height, slices, "0"])
+        data_writer.writerow([width - 1, height - 1, slices - 1, "0"])
        
     for x in range(0, width):
         # Save Vertical (X) slice to tmp/slices folder. Convert to black and white and save jpg file
@@ -113,26 +111,28 @@ def get_patches(filepath, slice_filepath, csv_path):
 
 # Main
 # Code to make temp directories to save stuff in
-#def setupDirectories(text, ml_alg):
-directory = "C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\python\\example_subset_raw\\scan_1"
-cwd = os.getcwd()
-tmp_path = cwd + "\\tmp"
-slice_path = tmp_path + "\\slices"
-if not os.path.exists(tmp_path):
-    os.mkdir(tmp_path)
-if not os.path.exists(slice_path):
-    os.mkdir(slice_path)
+def setupDirectories(text, ml_alg):
+    directory = text#"C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\python\\example_subset_raw\\scan_1"
+    cwd = os.getcwd()
+    tmp_path = cwd + "\\tmp"
+    slice_path = tmp_path + "\\slices"
+    if not os.path.exists(tmp_path):
+        os.mkdir(tmp_path)
+    if not os.path.exists(slice_path):
+        os.mkdir(slice_path)
+    
+    model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x3-pat3va20")
+    
+    if ml_alg == 1:
+        model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-Pat1")
+    if ml_alg == 2:
+        model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x3-pat3va20")
+    if ml_alg == 3:
+        model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-1552931682")
 
-if ml_alg == 1:
-    model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-1552931682")
-else if ml_alg == 2:
-    model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-1552931682")
-else if ml_alg == 3:
-    model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-1552931682")
-
-# Run through all patches on all scans within directory
-for file_name in os.listdir(directory):
-    file = os.path.join(directory, file_name)
-    if ".mhd" in file_name:
-        get_patches(file, slice_path, tmp_path)
-#    return tmp_path
+    # Run through all patches on all scans within directory
+    for file_name in os.listdir(directory):
+        file = os.path.join(directory, file_name)
+        if ".mhd" in file_name:
+            get_patches(file, slice_path, tmp_path, model)
+    return tmp_path

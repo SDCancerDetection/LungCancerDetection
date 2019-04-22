@@ -11,6 +11,7 @@ tmp/
 
 # Distribution / packaging
 .Python
+example_subset_raw/
 pythondist/
 build/
 develop-eggs/

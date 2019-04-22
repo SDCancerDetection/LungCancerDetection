@@ -2,6 +2,12 @@
 <html lang="en">
 
 <head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        
     <title>Senior Design Layout</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +18,13 @@
 
         body {
             margin: 0;
+            background: #DDD;
         }
+
+        #scan-container {
+            border-bottom: 0 solid #FFD800;
+        }
+
         /* Style the header */
 
         .header {
@@ -23,37 +35,48 @@
         /* Style the top navigation bar */
 
         .topnav {
-            overflow: hidden;
+            float: left;
+            width: 100%;
             background-color: #333;
+            color: #FFD800;
+            font-size: 18px;
+            border-bottom: 1px solid #FFD800;
         }
         /* Style the topnav links */
 
         .topnav a {
             float: left;
             display: block;
-            color: #f2f2f2;
+            color: #FFD800;
+            border-right: 1px solid #444;
             text-align: center;
-            padding: 14px 16px;
+            padding: 15px;
+            height: 50px;
             text-decoration: none;
         }
         /* Change color on hover */
 
         .topnav a:hover {
-            background-color: #ddd;
+            background-color: #FFD800;
             color: black;
         }
 
-        #submit {
+        .topnav label {
             float: left;
             display: block;
-            color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 15px;
+            height: 50px;
             text-decoration: none;
         }
 
-        #submit:hover {
-            background-color: #ddd;
+        .small-label {
+            border-right: 1px solid #444;
+            cursor: pointer;
+        }
+
+        .small-label:hover {
+            background-color: #FFD800;
             color: black;
             cursor: pointer;
         }
@@ -70,16 +93,16 @@
             clear: both;
         }
 
-        .btn-group .button {
-            background-color: #333;
-            border: 1px solid black;
-            color: white;
-            padding: 10px 5px;
+        .btn-group button {
+            background-color: #FFD800;
+            border: none;
+            color: black;
+            padding: 10px 14px;
             text-align: center;
-            text-decoration: none;
-            display: inline-block;
             font-size: 16px;
+            margin: 2px 2px;
             cursor: pointer;
+            border-radius: 15px;
             float: left;
         }
 
@@ -107,19 +130,23 @@
 
         .patch-container {
             clear: both;
+            width: 100%;
             margin: 20px 0;
             float: left;
-            border: 1px solid darkred;
+            border: 1px solid #FFD800;
             padding: 10px 10px 0;
-            background: #FFF;
-            border-bottom: 0;
+            background: #333;
+            color: #FFD800;
         }
 
         .patch-listing {
             list-style: none;
             padding: 0;
             margin: 10px -10px 0;
-            border-top: 1px solid #721c24;
+            border-top: 1px solid #FFD800;
+            height: 389px;
+            overflow-x: hidden;
+            overflow-y: scroll;
         }
 
         .patch {
@@ -134,16 +161,19 @@
             width: 25%;
             padding: 10px;
             height: 674px;
+            background: #333;
         }
 
         .scans {
             width: 75%;
+            border-left: 1px solid #FFD800;
         }
 
         .z-images {
             width: 50%;
             float: left;
             height: 674px;
+            overflow: hidden;
         }
 
         .x-y-images {
@@ -156,56 +186,124 @@
 
         .x-y-image {
             padding: 10px;
+            height: 320px;
+            display: block;
+            margin: 0 auto;
+            transform: rotate(180deg);
         }
 
         .slice-container {
             width: 390px;
             height: 390px;
             margin: 0;
+            zoom: 1.5;
             position: relative;
-            top: 50%;
-            left: 50%;
+            top: 63.333333%;
+            left: 63.3333333%;
             transform: translate(-50%, -50%);
+        }
+
+        .clear {
+            background: transparent !important;
+        }
+
+        .slidecontainer {
+            float: left;
+            padding: 9px 0 0 20px;
+        }
+
+        .img-magnifier-container {
+            position: relative;
+        }
+
+        .img-magnifier-glass {
+            position: absolute;
+            border: 3px solid #000;
+            border-radius: 50%;
+            cursor: none;
+            /*Set the size of the magnifier glass:*/
+            width: 200px;
+            height: 200px;
+            z-index: 9999;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            top: 50px;
+            left: 56px;
+            position: absolute;
+            background-color: #333;
+            color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            float: none;
+            color: #FFD800;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #FFD800;
+            color: black;
+        }
+
+        .dropdown-content .is-selected {
+            border: 1px solid #FFD800;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
         }
 
     </style>
 </head>
 
 <body>
-
-    <div class="header">
-        <h1>UI Design</h1>
-    </div>
-
     <div class="topnav">
-        <a href="#">Patient Information</a>
-        <label id="submit" class="custom-file-upload">
+        <label class="custom-file-upload small-label">
             <input style="display: none;" id="input-file" type="file" webkitdirectory />
-            Upload Scan
+            <i style="font-size:24px" class="fa">&#xf07c;</i>
         </label>
-        <label id="submit" class="custom-file-upload">
-            1 -
-            <input id="scan-number" type="" name="quantity" min="1" max="5">
-            - <span class="scan-largest">1</span>
+        <div class="dropdown">
+                <a class="fa dropbtn" href="#">Model&nbsp;&nbsp;<i class="fa fa-caret-down"></i></a>
+            <div class="dropdown-content">
+              <a class="is-selected" href="#">ALGORITHM 1</a>
+              <a href="#">ALGORITHM 2</a>
+              <a href="#">ALGORITHM 3</a>
+            </div>
+        </div>
+        <label class="small-label" id="run">Run</label>
+        <label style="border: none;">
+            <i class="fa">Scan Depth:
+            <input style="width: 35px; text-align: center;" id="scan-number" type="" name="quantity" min="1" max="5">
+            (max: <span class="scan-largest">__</span>mm)</i>
         </label>
-        <a id="run" href="#">Run</a>
     </div>
     <div id="scan-container">
         <div class="row">
-            <div class="column info" style="background-color:#aaa;">
-                <h2>Tools</h2>
-                <p>Other Patient information</p>
+            <div class="column info">
                 <div class="btn-group" style="float: left;">
-                    <button class="button">Zoom In</button>
-                    <button class="button">Zoom Out</button>
-                    <button class="button">Contrast</button>
+                    <button class="btn" id="mag"><i style='font-size:16px' class='fas'>&#xf00e;</i></button>
+                    <button style="margin-left: 15px;" class="btn"><i class='fas'>&#xf545;</i></button>
+                    <div class="slidecontainer" id="contrast">
+                        <label><i style='color:#FFD800' class="material-icons">&#xe3ab;</i></label>
+                        <input type="range" min="1" max="300" value="100" class="slider" name="contrast" id="contrastSlider" onchange="changeContrast()">
+                    </div>
                 </div>
                 <div class="patch-container">
-                    <span>Percentages below represent the likelyhood of a cancerous nodule</span>
-                    <ul class="patch-listing">
-                    </ul>
+                    <span>Percentages below represent the likelihood of a cancerous nodule</span><br />
+                    <div style="border-top: 1px solid #FFD800; padding: 5px 10px 0; margin: 5px -10px 0;"><input type="checkbox" name="color-toggle" id="color-toggle" checked>Patch Coloring</div>
+                    <ul class="patch-listing"></ul>
                 </div>
-                <p style="clear:both"><br></p>
             </div>
             <div class="column scans">
                 <div class="z-images" style="background-color:#bbb;">
@@ -218,13 +316,9 @@
         </div>
     </div>
 </body>
-
 </html>
 
 <script>
     window.$ = window.jQuery = require('./jquery-3.3.1.min.js');
-
-</script>
-<script>
     require('./renderer.js')
 </script>
