@@ -1,19 +1,19 @@
 import sys
+import os
 import numpy
 import pandas as pd
 import pydicom
-import os
 import scipy.ndimage
 import SimpleITK as sitk
 import matplotlib.pyplot as plt
 from skimage import measure, morphology
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-
 # Load a scan and infer the pixel size in the Z direction, which is the slice_thickness
 def load_scan(path):
     slices = [pydicom.read_file(path + '/' + s) for s in os.listdir(path)]
     slices.sort(key=lambda x: float(x.ImagePositionPatient[2]))
+
     try:
         slice_thickness = numpy.abs(slices[0].ImagePositionPatient[2] - slices[1].ImagePositionPatient[2])
     except:
@@ -162,64 +162,35 @@ def show_dcm_info(dataset):
     print("Patient id..........:", dataset.PatientID)
     print("Modality............:", dataset.Modality)
 
-
 # MAIN
+# "C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\python\\dicom\\"
 
-INPUT_FOLDER = "dicom\\"
-patients = os.listdir(INPUT_FOLDER)
-patients.sort()
+def evaluate(path):
+    INPUT_FOLDER = path + "\\"
+    patients = os.listdir(INPUT_FOLDER)
+    patients.sort()
 
-file_path = INPUT_FOLDER + patients[0]
-print(file_path)
-disp_images = True
+    file_path = INPUT_FOLDER + patients[0]
+    disp_images = True
+    # Show histogram of HU values present in image
+    first_patient = load_scan(file_path)
+    # Set up dataset with all patient information
+    i = 1
+    num_to_plot = 5
+    for file_name in os.listdir(file_path):
+        file = os.path.join(file_path, file_name)
+        dataset = pydicom.dcmread(file)
 
-# Show histogram of HU values present in image
-first_patient = load_scan(file_path)
+        if i >= num_to_plot:
+            break
+        i += 1
 
-# Set up dataset with all patient information
-i = 1
-num_to_plot = 5
-file = file_path
-for file_name in os.listdir(file_path):
-    file = os.path.join(file_path, file_name)
-    dataset = pydicom.dcmread(file)
-    show_dcm_info(dataset)
+    first_patient_pixels = get_pixels_hu(first_patient)
+    plt.hist(first_patient_pixels.flatten(), bins=80, color='c')
+    plt.xlabel("Hounsfield Units (HU)")
+    plt.ylabel("Frequency")
+    if not os.path.exists(path + "\\tempdata"):
+        os.makedirs(path + "\\tempdata")
 
-    if i >= num_to_plot:
-        break
-    i += 1
-
-
-first_patient_pixels = get_pixels_hu(first_patient)
-plt.hist(first_patient_pixels.flatten(), bins=80, color='c')
-plt.xlabel("Hounsfield Units (HU)")
-plt.ylabel("Frequency")
-plt.savefig("SavedImages/plot.png")
-plt.show()
-
-
-if disp_images:
-    # Show some slice in the middle
-    plt.imshow(first_patient_pixels[80], cmap=plt.cm.gray)
-    plt.savefig("SavedImages/scan.png")
-    plt.show()
-
-    # Resample image to get pixel widths similar
-    pix_resampled, spacing = resample(first_patient_pixels, first_patient, [1, 1, 1])
-
-    # Plot in 3D the bone structure of the patient
-    plot_3d(pix_resampled, 400)
-
-    # Print Lungs
-    segmented_lungs = segment_lung_mask(pix_resampled, False)
-    segmented_lungs_fill = segment_lung_mask(pix_resampled, True)
-
-    plt.imshow(segmented_lungs_fill[80], cmap=plt.cm.gray)
-    plt.savefig("SavedImages/segmented_scan_fill.png")
-    plt.show()
-
-    plot_3d(segmented_lungs, 0)
-    plot_3d(segmented_lungs_fill, 0)
-
-    # Plot difference
-    plot_3d(segmented_lungs_fill - segmented_lungs, 0)
+    plt.savefig(path + "\\tempdata\\plot.png")
+    return path + "\\tempdata\\plot.png"

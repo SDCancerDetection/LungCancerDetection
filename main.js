@@ -4,7 +4,7 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 
 const PY_DIST_FOLDER = 'pythondist'
-const PY_FOLDER = 'pytho'
+const PY_FOLDER = 'python'
 const PY_MODULE = 'api' // without .py suffix
 
 const guessPackaged = () => {
@@ -16,9 +16,11 @@ const getScriptPath = () => {
   if (!guessPackaged()) {
     return path.join(__dirname, PY_FOLDER, PY_MODULE + '.py')
   }
+
   if (process.platform === 'win32') {
     return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE + '.exe')
   }
+
   return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE)
 }
 
@@ -72,7 +74,6 @@ const createPyProc = () => {
   }
 
   if (pyProc != null) {
-    //console.log(pyProc)
     console.log('child process success on port ' + port)
   }
 }

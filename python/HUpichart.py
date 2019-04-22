@@ -39,13 +39,14 @@ def bin_values(array):
 
     return values, labels
 
+def generate_hugraph(path):
+    img = Image.open(patch)
+    pix_val = list(img.getdata())
+    bins, label = bin_values(pix_val)
 
-img = Image.open(patch)
-pix_val = list(img.getdata())
-bins, label = bin_values(pix_val)
+    fig1, ax1 = plt.subplots()
+    ax1.pie(bins, labels=label, autopct='%1.1f%%')
+    ax1.axis('equal')
 
-fig1, ax1 = plt.subplots()
-ax1.pie(bins, labels=label, autopct='%1.1f%%')
-ax1.axis('equal')
-
-plt.savefig("./SavedImages/piechart_HU.png")
+    plt.savefig(path + "\\tempdata\\piechart_HU.png")
+    return path + "\\tempdata\\piechart_HU.png"

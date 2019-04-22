@@ -42,6 +42,13 @@ ajv@^6.7.0:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+amator@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/amator/-/amator-1.1.0.tgz#08c6b60bc93aec2b61bbfc0c4d677d30323cc0f1"
+  integrity sha1-CMa2C8k67Cthu/wMTWd9MDI8wPE=
+  dependencies:
+    bezier-easing "^2.0.3"
+
 ansi-align@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-2.0.0.tgz#c36aeccba563b89ceb556f3690f0b1d9e3547f7f"
@@ -198,6 +205,11 @@ bcrypt-pbkdf@^1.0.0:
   integrity sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4=
   dependencies:
     tweetnacl "^0.14.3"
+
+bezier-easing@^2.0.3:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/bezier-easing/-/bezier-easing-2.1.0.tgz#c04dfe8b926d6ecaca1813d69ff179b7c2025d86"
+  integrity sha1-wE3+i5JtbsrKGBPWn/F5t8ICXYY=
 
 binary@^0.3.0:
   version "0.3.0"
@@ -1640,6 +1652,11 @@ napi-build-utils@^1.0.1:
   resolved "https://registry.yarnpkg.com/napi-build-utils/-/napi-build-utils-1.0.1.tgz#1381a0f92c39d66bf19852e7873432fc2123e508"
   integrity sha512-boQj1WFgQH3v4clhu3mTNfP+vOBxorDlE8EKiMjUlLG3C4qAESnn9AxIOkFgTR2c9LtzNjPrjS60cT27ZKBhaA==
 
+ngraph.events@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/ngraph.events/-/ngraph.events-0.0.4.tgz#72cb364488dd0fd7f057458449f6a3b17a722d9a"
+  integrity sha1-css2RIjdD9fwV0WESfajsXpyLZo=
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
@@ -1871,6 +1888,15 @@ package-json@^4.0.0:
     registry-auth-token "^3.0.1"
     registry-url "^3.0.3"
     semver "^5.1.0"
+
+panzoom@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/panzoom/-/panzoom-7.2.0.tgz#ac68e430fc7839400d0b4244bb6807fd6e3b32f7"
+  integrity sha512-x7L8aYll43Z6Wk/X48Xvk9dj+0M1oI9fBFXFyuAWuVA5VU1rAjUsLR7bqb8mV9xqk4oBqSX97QTYtSbQ2ZQJdQ==
+  dependencies:
+    amator "^1.1.0"
+    ngraph.events "0.0.4"
+    wheel "0.0.5"
 
 parse-author@^2.0.0:
   version "2.0.0"
@@ -2764,6 +2790,11 @@ wcwidth@^1.0.1:
   integrity sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=
   dependencies:
     defaults "^1.0.3"
+
+wheel@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/wheel/-/wheel-0.0.5.tgz#8b4d0930e72c9b8dfbb907833ee333de97b014fa"
+  integrity sha1-i00JMOcsm437uQeDPuMz3pewFPo=
 
 which-module@^2.0.0:
   version "2.0.0"
