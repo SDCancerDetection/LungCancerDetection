@@ -121,14 +121,14 @@ def setupDirectories(text, ml_alg):
     if not os.path.exists(slice_path):
         os.mkdir(slice_path)
     
-    model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x3-pat3va20")
+    model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-Pat3")
     
     if ml_alg == 1:
-        model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-Pat1")
+        model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-Pat3")
     if ml_alg == 2:
-        model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x3-pat3va20")
+        model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-Pat1")
     if ml_alg == 3:
-        model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x2-1552931682")
+        model = tf.keras.models.load_model(cwd + "\\python\\savedModels\\CT-Patches-cnn-64x3-val20")
 
     # Run through all patches on all scans within directory
     for file_name in os.listdir(directory):

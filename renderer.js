@@ -9,24 +9,46 @@ var patch_list = [];
 //C:\Users\Jonathan Lehto\Documents\GitHub\LungCancerDetection\tmp
 let file_selector = document.querySelector('#input-file')
 $(file_selector).change(function () {
+    $(".loader").show();
     document.querySelector('.slice-container').innerHTML = "";
     document.querySelector('.x-y-images').innerHTML = "";
     document.querySelector('.patch-listing').innerHTML = "";
-    generateHTML("C:\\Users\\Jonathan Lehto\\Documents\\GitHub\\LungCancerDetection\\tmp");
-/*    client.invoke("dirSetup", document.getElementById("input-file").files[0].path, 3, (error, res) => {
+    client.invoke("dirSetup", document.getElementById("input-file").files[0].path, selectedModel, (error, res) => {
         if (error) {
-          console.log(error)
+            window.alert("A Problem occurred " + error);
+            $(".loader").hide();
         } else {
-          console.log(res)
-          generateHTML(res);
+            console.log(res)
+            $(".loader").hide();
+            generateHTML(res);
         }
-    });*/
+    });
 });
 
 $("#scan-number").on("change paste keyup", function () {
     setZImage($(this).val());
 })
 
+$(".dropdown-content a").on("click", function () {
+    $(".dropdown-content a").each(function () {
+        $(this).removeClass("is-selected");
+    });
+
+    if ($(this).attr("id") == "model-1") {
+        console.log("1 is selected");
+        selectedModel = 1;
+    } else if ($(this).attr("id") == "model-2") {
+        console.log("2 is selected");
+        selectedModel = 2;
+    } else {
+        console.log("3 is selected");
+        selectedModel = 3;
+    }
+
+    $(this).addClass("is-selected");
+})
+
+var selectedModel = 1;
 var selectedImage;
 var magExists = false;
 

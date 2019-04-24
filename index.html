@@ -264,9 +264,28 @@
             display: block;
         }
 
+        .loader {
+            display: none;
+            position: absolute;
+            top: 50%;
+            margin-left: -120px;
+            margin-top: -120px;
+            left: 50%;
+            border: 16px solid #333; /* Light grey */
+            border-top: 16px solid #FFD800; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
-
+<div class="loader"></div>
 <body>
     <div class="topnav">
         <label class="custom-file-upload small-label">
@@ -276,9 +295,9 @@
         <div class="dropdown">
                 <a class="fa dropbtn" href="#">Model&nbsp;&nbsp;<i class="fa fa-caret-down"></i></a>
             <div class="dropdown-content">
-              <a class="is-selected" href="#">ALGORITHM 1</a>
-              <a href="#">ALGORITHM 2</a>
-              <a href="#">ALGORITHM 3</a>
+              <a id="model-1" class="is-selected" href="#">64x64 2 Layer Patience 3</a>
+              <a id="model-2" href="#">64x64 2 Layer Patience 1</a>
+              <a id="model-3" href="#">64x64 3 Layer Patience 1</a>
             </div>
         </div>
         <label class="small-label" id="run">Run</label>
