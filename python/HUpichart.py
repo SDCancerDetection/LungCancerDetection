@@ -1,6 +1,8 @@
 from PIL import Image
 import matplotlib.pyplot as plt
 
+# For a given image, generate a pie chart of body substance based on HU.
+
 
 patch = ".\\test_patches\\test_patch_0.05_R0.tiff"
 

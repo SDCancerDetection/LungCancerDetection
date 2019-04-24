@@ -9,6 +9,10 @@ import matplotlib.pyplot as plt
 from skimage import measure, morphology
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
+# This code is used to do all of the preprocessing of extracting patches for the machine learning algorithm
+#	to train on. This is not used in the final app, but is a good resource to extract patches needed.
+#	All normalizing algorithms are the same as the lung_to_patches.py and so the patches are treated the same.
+
 # Load a scan and infer the pixel size in the Z direction, which is the slice_thickness
 def load_scan(path):
     slices = [pydicom.read_file(path + '/' + s) for s in os.listdir(path)]

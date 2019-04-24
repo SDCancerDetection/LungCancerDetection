@@ -12,6 +12,13 @@ import time
 import random
 from time import gmtime, strftime
 
+# This file takes a scan in the given directory (RAW only) and takes each patch
+#	of the scan (each patch from every slice in increments of "SLIDE_INCREMENT")
+#	and predicts on the patch. The predictions are saved in a CSV file in the temp
+#	folder that is created. Also, each slice of the scan is extracted and saved to
+# 	allow the front end to display all of the lung slices. This is the actual code
+#	run by the application to do its predictions.
+
 # Constants
 PATCH_WIDTH = 64          # This is the number of pixels wanted in the final patch
 SLIDE_INCREMENT = 32       # Pixels to move sliding window between each patch
