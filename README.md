@@ -40,9 +40,12 @@ Although we met the project requirements in the project definition for the appli
 
 You'll need to download the following:
 
-<a href="https://git-scm.com/downloads">GitHub Command Line</a>
-<a href="https://nodejs.org/en/">Node.js</a>
-<a href="https://yarnpkg.com/en/docs/install#windows-stable">Yarn</a>
+<a href="https://git-scm.com/downloads">Git</a><br />
+<a href="https://nodejs.org/en/">Node.js</a><br />
+<a href="https://github.com/nodejs/node-gyp">Node GYP</a><br />
+<a href="https://yarnpkg.com/en/docs/install#windows-stable">Yarn</a><br />
+<a href="https://www.python.org/">python2.7</a><br />
+<a href="https://www.python.org/">python3.6</a>
 
 Clone the project
 
@@ -52,28 +55,34 @@ This will create a new folder called LungCancerDetection
 
 Download Packages
 
-Using Git CMD type "npm install", this will install the dependencies to run the project.
+Using Git CMD type "yarn install", this will install the dependencies to run the project.
 
 Create a new branch.
 
-Enter the folder with Git CMD, and type "git checkout -b Initials-Develop" (eg "git checkout -b JL-Develop")
+Enter the folder with Git CMD, and type "git checkout -b branch-name" (eg "git checkout -b JL-Develop")
 
-Edit the code
+Run the following commands (in quotes)
+"yarn install" - installs node packages
+"yarn electron-rebuild ." - rebuilds node packaged, should be run after every install or add command
+"yarn add package" - example of how to add node packages
+Please refrain from using node commands, they may break the program
 
-Using any IDE you want edit the code you want to change
+Edit the code using any IDE you want
 
-Run Program
+### Run Program
 
-Using Git CMD type "yarn build" in the correct directory (LungCancerDetection)
-This will create a folder called dist, using windows File Explorer go into that folder and run the SDCancerDetectionXXXXXX.exe file.
-You should now be running the program.
+Using Git CMD type "yarn electron ." in the correct directory (LungCancerDetection)
 
 Push New Code
 
-Using Git CMD type "git push origin Initals-Develop" (eg "git push origin JL-Develop")
+Using Git CMD type "git push origin branch-name" (eg "git push origin JL-Develop")
 You may be prompted for user and password
 This will push your branch to the online repository
 
 Merge Code
 
 Go to the online reposity --> select branches --> select your (should be a pull request) --> click merge pull request
+
+### Build Program
+
+
